@@ -7,6 +7,7 @@ namespace SecureMessageTransmitter
 {
     internal class Program
     {
+        // This a good approach to demonstrate the code. An UNIT test project is also important.
         static void Main(string[] args)
         {
             KeyManager.GenerateRsaKeys(out string publicKey, out string privateKey);

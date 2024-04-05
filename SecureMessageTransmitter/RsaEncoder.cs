@@ -9,6 +9,8 @@ namespace SecureMessageTransmitter
 {
     public class RsaEncoder
     {
+        // Consider adding a shared key project.
+
         public static byte[] RsaEncrypt(byte[] encodedData, string publicKey)
         {
             using (var rsa = RSA.Create())

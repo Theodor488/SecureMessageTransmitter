@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace SecureMessageTransmitter
 {
     public static class KeyManager
-    {
+    { 
+        // Why use "out" variables rather than create an simple class to contain public/private key?
         public static void GenerateRsaKeys(out string publicKey, out string privateKey)
         {
             // Creates RSA key pair with 2048 bits
