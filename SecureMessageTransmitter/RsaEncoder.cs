@@ -9,7 +9,7 @@ namespace SecureMessageTransmitter
 {
     public class RsaEncoder
     {
-        // Consider adding a shared key project.
+        // Consider adding methods that do shared key encyrption and decryption.
 
         public static byte[] RsaEncrypt(byte[] encodedData, string publicKey)
         {
