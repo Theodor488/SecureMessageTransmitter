@@ -11,7 +11,7 @@ namespace smt_ux.ViewModels
     {
         public MainViewModel()
         {
-			KeyPair = new KeyPairViewModel();
+            KeyPair = new KeyPairViewModel();
         }
 
         private string _Message;

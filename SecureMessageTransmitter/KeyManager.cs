@@ -10,7 +10,7 @@ namespace SecureMessageTransmitter
 {
     public static class KeyManager
     { 
-        public static RsaKeyPair GenerateRsaKeys()
+        public static KeyPair GenerateRsaKeys()
         {
             // Creates RSA key pair with 2048 bits
             using (RSA rsa = RSA.Create(2048)) 
@@ -18,7 +18,7 @@ namespace SecureMessageTransmitter
                 string publicKey = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
                 string privateKey = Convert.ToBase64String(rsa.ExportPkcs8PrivateKey());
 
-                return new RsaKeyPair(publicKey, privateKey);
+                return new KeyPair(publicKey, privateKey);
             }
         }
     }

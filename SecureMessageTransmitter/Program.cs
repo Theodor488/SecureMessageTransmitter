@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Formats.Asn1;
 using System.Text;
 using System.Security.Cryptography.X509Certificates;
+using SecureMessageTransmitter.Models;
 
 namespace SecureMessageTransmitter
 {
@@ -12,7 +13,7 @@ namespace SecureMessageTransmitter
         // Also, take a stab at a JAVA project that performs the same functions.
         static void Main(string[] args)
         {
-            RsaKeyPair rsaKeyPair = KeyManager.GenerateRsaKeys();
+            KeyPair rsaKeyPair = KeyManager.GenerateRsaKeys();
 
             string secretmessage = "Hello there this is a secret message";
             Console.WriteLine($"Message: {secretmessage}");
