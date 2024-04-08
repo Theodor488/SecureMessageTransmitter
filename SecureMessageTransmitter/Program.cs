@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Formats.Asn1;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SecureMessageTransmitter
 {
@@ -10,7 +11,7 @@ namespace SecureMessageTransmitter
         // This a good approach to demonstrate the code. An UNIT test project is also important.
         static void Main(string[] args)
         {
-            KeyManager.GenerateRsaKeys(out string publicKey, out string privateKey);
+            RsaKeyPair rsaKeyPair = KeyManager.GenerateRsaKeys();
 
             string secretmessage = "Hello there this is a secret message";
             Console.WriteLine($"Message: {secretmessage}");
@@ -20,14 +21,14 @@ namespace SecureMessageTransmitter
             Console.WriteLine($"ASN.1 EncodedBytes: {BitConverter.ToString(asn1EncodedBytes)}");
 
             // 2. Encrypt the ASN.1 encoded message using RSA
-            byte[] encryptedMessage = RsaEncoder.RsaEncrypt(asn1EncodedBytes, publicKey);
+            byte[] encryptedMessage = RsaEncoder.RsaEncrypt(asn1EncodedBytes, rsaKeyPair.PublicKey);
             Console.WriteLine($"RSA encryptedMessage: {BitConverter.ToString(encryptedMessage)}");
-
+            
             // Simulate transmission of the encrypted message
             byte[] receivedEncryptedMessage = encryptedMessage;
 
             // 3. Decrypt the ASN.1 encoded message message back from RSA
-            byte[] decryptedMessage = RsaEncoder.RsaDecrypt(receivedEncryptedMessage, privateKey);
+            byte[] decryptedMessage = RsaEncoder.RsaDecrypt(receivedEncryptedMessage, rsaKeyPair.PrivateKey);
 
             // 4. Decode message from ASN.1
             string decodedString = Asn1Encoder.DecodeMessageFromAsn1(decryptedMessage);
