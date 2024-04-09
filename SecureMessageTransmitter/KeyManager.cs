@@ -9,7 +9,21 @@ using System.Threading.Tasks;
 namespace SecureMessageTransmitter
 {
     public static class KeyManager
-    { 
+    {
+        public static AesSymmetricKey GenerateAesKey()
+        {
+            using (Aes aes = Aes.Create())
+            {
+                aes.GenerateIV();
+                aes.GenerateKey();
+
+                byte[] aesIV = aes.IV;
+                byte[] aesKey = aes.Key;
+
+                return new AesSymmetricKey(aesIV, aesKey);
+            }
+        }
+
         public static KeyPair GenerateRsaKeys()
         {
             // Creates RSA key pair with 2048 bits

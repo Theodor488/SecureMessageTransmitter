@@ -14,27 +14,42 @@ namespace SecureMessageTransmitter
         static void Main(string[] args)
         {
             KeyPair rsaKeyPair = KeyManager.GenerateRsaKeys();
+            AesSymmetricKey aesSymmetricKey = KeyManager.GenerateAesKey();
+
+            // AES Key / IV
+            byte[] aesIV = aesSymmetricKey.IV;
+            byte[] aesKey = aesSymmetricKey.Key;
 
             string secretmessage = "Hello there this is a secret message";
             Console.WriteLine($"Message: {secretmessage}");
 
-            // 1. Encode the message into ASN.1
+            // 1. Encrypt the AES key using RSA
+            byte[] encryptedAesKey = RsaEncoder.RsaEncrypt(aesKey, rsaKeyPair.PublicKey);
+            Console.WriteLine($"RSA encrypted AES Symmetric key: {BitConverter.ToString(encryptedAesKey)}");
+
+            // 2. Transfer (handshake) RSA-encrypted AES key from client to server (simulation)
+            byte[] receivedEncryptedAesKey = encryptedAesKey;
+
+            // 3. Decrypt the received RSA-encrypted AES key
+            byte[] decryptedAesKey = RsaEncoder.RsaDecrypt(receivedEncryptedAesKey, rsaKeyPair.PrivateKey);
+
+            // 4. Encode the secret message into ASN.1, preparing it for encryption
             byte[] asn1EncodedBytes = Asn1Encoder.EncodeMessageToAsn1(secretmessage);
             Console.WriteLine($"ASN.1 EncodedBytes: {BitConverter.ToString(asn1EncodedBytes)}");
 
-            // 2. Encrypt the ASN.1 encoded message using RSA
-            byte[] encryptedMessage = RsaEncoder.RsaEncrypt(asn1EncodedBytes, rsaKeyPair.PublicKey);
-            Console.WriteLine($"RSA encryptedMessage: {BitConverter.ToString(encryptedMessage)}");
-            
-            // Simulate transmission of the encrypted message
-            byte[] receivedEncryptedMessage = encryptedMessage;
+            // 5. Encrypt the ASN.1 encoded secret message using the AES key
+            byte[] aesEncryptedMessage = AesEncryptor.AesEncrypt(asn1EncodedBytes, aesKey, aesIV);
+            Console.WriteLine($"AES encryptedMessage: {BitConverter.ToString(aesEncryptedMessage)}");
 
-            // 3. Decrypt the ASN.1 encoded message message back from RSA
-            byte[] decryptedMessage = RsaEncoder.RsaDecrypt(receivedEncryptedMessage, rsaKeyPair.PrivateKey);
+            // 6. Transfer (handshake) AES-encrypted ASN.1 encoded secret messsage from client to server (simulation)
+            byte[] receivedEncryptedAesMessage = aesEncryptedMessage;
 
-            // 4. Decode message from ASN.1
-            string decodedString = Asn1Encoder.DecodeMessageFromAsn1(decryptedMessage);
-            Console.WriteLine($"String Decoded from ASN.1: {decodedString}");
+            // 7. Decrypt the message using the AES key
+            byte[] decryptedMessage = AesEncryptor.AesDecrypt(receivedEncryptedAesMessage, aesKey, aesIV);
+
+            // 8. Decode the message from ASN.1 to retrieve the original plaintext secret message
+            string decodedMessage = Asn1Encoder.DecodeMessageFromAsn1(decryptedMessage);
+            Console.WriteLine($"String Decoded from ASN.1: {decodedMessage}");
         }
     }
 }
