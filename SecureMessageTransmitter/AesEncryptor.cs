@@ -14,23 +14,21 @@ namespace SecureMessageTransmitter
         {
             byte[] encrypted;
 
+            // AesManaged is a class with the AES encryption and decryption functionality
             using (AesManaged aes = new AesManaged())
             {
                 ICryptoTransform encryptor = aes.CreateEncryptor(aesKey, aesIV);
 
+                // MemoryStream holds the encrypted data.
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    // Create crypto stream using the CryptoStream class. This class is the key to encryption
-                    // and encrypts and decrypts data from any given stream. 
                     using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                     {
-                        using (StreamWriter sw = new StreamWriter(cs))
-                            sw.Write(encodedData);
-                        encrypted = ms.ToArray();
+                        cs.Write(encodedData, 0, encodedData.Length); // Write byte array directly
+                        cs.FlushFinalBlock(); // Ensure all data is written to the memory stream
                     }
+                    return ms.ToArray();
                 }
-
-                return encrypted;
             }
         }
 
@@ -49,13 +47,11 @@ namespace SecureMessageTransmitter
                         using (MemoryStream msResult = new MemoryStream())
                         {
                             cs.CopyTo(msResult);
-                            decrypted = msResult.ToArray();
+                            return  msResult.ToArray();
                         }
                     }
                 }
             }
-
-            return decrypted;
         }
     }
 }
