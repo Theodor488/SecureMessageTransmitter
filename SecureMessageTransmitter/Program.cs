@@ -10,7 +10,7 @@ namespace SecureMessageTransmitter
     internal class Program
     {
         // This a good approach to demonstrate the code. An UNIT test project is also important.
-        // Also, take a stab at a JAVA project that performs the same functions.
+        // Also, take a stab at a JAVA project that performs the same functions. 
         static void Main(string[] args)
         {
             KeyPair rsaKeyPair = KeyManager.GenerateRsaKeys();
