@@ -25,7 +25,6 @@ namespace SecureMessageTransmitter
         public static string DecodeMessageFromAsn1(byte[] encodedData)
         {
             AsnReader reader = new AsnReader(encodedData, AsnEncodingRules.DER);
-
             return reader.ReadCharacterString(UniversalTagNumber.IA5String);
         }
 

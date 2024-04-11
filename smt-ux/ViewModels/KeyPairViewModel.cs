@@ -19,7 +19,7 @@ namespace smt_ux.ViewModels
 		}
 
 		public string PublicKey { get => _Keys.PublicKey; }
-        public string PrivateKey { get => _Keys.PublicKey; }
+        public string PrivateKey { get => _Keys.PrivateKey; }
 
 
     }
